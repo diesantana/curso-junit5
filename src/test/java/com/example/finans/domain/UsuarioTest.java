@@ -1,5 +1,6 @@
 package com.example.finans.domain;
 
+import static com.example.finans.domain.builders.UsuarioBuilder.umUsuario;
 import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.DisplayName;
@@ -12,7 +13,8 @@ class UsuarioTest {
 	@Test
 	@DisplayName("Deve criar um usuário válido")
 	void deveCriarUmUsuarioValido() {
-		Usuario user = new Usuario(1L, "Bob", "bob@email.com", "1234");
+		//Usuario user = new Usuario(1L, "Bob", "bob@email.com", "1234");
+		Usuario user = umUsuario().agora();
 		assertAll("Usuário valido", 
 				() -> assertEquals(1L, user.getId()),
 				() -> assertEquals("Bob", user.getNome()),
@@ -25,7 +27,8 @@ class UsuarioTest {
 	@DisplayName("Deve lançar uma exceção: usuário sem nome")
 	void deveRejeitarUmUsuarioSemNome() {
 		ValidationException ex = assertThrows(ValidationException.class, () -> 
-			new Usuario(1L, null, "bob@email.com", "1234"));
+			//new Usuario(1L, null, "bob@email.com", "1234"));
+			umUsuario().comNome(null).agora());
 		assertEquals("Nome é obrigatório", ex.getMessage());
 	}
 	
