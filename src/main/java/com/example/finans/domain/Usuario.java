@@ -9,9 +9,9 @@ public class Usuario {
 	private String senha;
 	
 	public Usuario(Long id, String nome, String email, String senha) {
-		if(nome == null) throw new ValidationException("Nome é obrigatório");
-		if(email == null) throw new ValidationException("Email é obrigatório");
-		if(senha == null) throw new ValidationException("Senha é obrigatória");
+		if(nome == null || nome.trim().isEmpty()) throw new ValidationException("Nome é obrigatório");
+		if(email == null || email.trim().isEmpty()) throw new ValidationException("Email é obrigatório");
+		if(senha == null || senha.trim().isEmpty()) throw new ValidationException("Senha é obrigatória");
 		
 		this.id = id;
 		this.nome = nome;
