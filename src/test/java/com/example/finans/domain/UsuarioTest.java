@@ -6,6 +6,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 
 import com.example.finans.domain.exception.ValidationException;
 
@@ -25,7 +27,7 @@ class UsuarioTest {
 				() -> assertEquals("1234", user.getSenha())
 		);
 	}
-	
+	/*
 	@Test
 	@DisplayName("Deve lançar uma exceção: usuário com nome nulo")
 	void deveRejeitarUmUsuarioComNomeNulo() {
@@ -73,7 +75,27 @@ class UsuarioTest {
 		umUsuario().comSenha("  ").agora());
 		assertEquals("Senha é obrigatória", ex.getMessage());
 	}
+	*/
 	
-
+	@ParameterizedTest(name = "[{index}] - {3}")
+	@CsvSource(value = {
+		"NULL, 'user@email.com', '1234', 'Nome é obrigatório'",
+		"'', 'user@email.com', '1234', 'Nome é obrigatório'",
+		"'  ', 'user@email.com', '1234', 'Nome é obrigatório'",
+		"'Bob', NULL, '1234', 'Email é obrigatório'",
+		"'Bob', '', '1234', 'Email é obrigatório'",
+		"'Bob', '  ', '1234', 'Email é obrigatório'",
+		"'Bob', 'user@email.com', NULL, 'Senha é obrigatória'",
+		"'Bob', 'user@email.com', '', 'Senha é obrigatória'",
+		"'Bob', 'user@email.com', '  ', 'Senha é obrigatória'"
+	}, nullValues = "NULL")
+	@DisplayName("Deve lançar uma exceção: usuário com dados inválidos")
+	void deveRejeitarUmUsuarioComDadosInvalidos(String nome, String email, String senha, String msgErro) {
+		ValidationException ex = assertThrows(ValidationException.class, () -> 
+			umUsuario().comNome(nome).comEmail(email).comSenha(senha).agora()
+		);
+		assertEquals(msgErro, ex.getMessage());
+	}
+	
 
 }
