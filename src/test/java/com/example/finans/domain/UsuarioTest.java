@@ -27,13 +27,51 @@ class UsuarioTest {
 	}
 	
 	@Test
-	@DisplayName("Deve lançar uma exceção: usuário sem nome")
-	void deveRejeitarUmUsuarioSemNome() {
+	@DisplayName("Deve lançar uma exceção: usuário com nome nulo")
+	void deveRejeitarUmUsuarioComNomeNulo() {
 		ValidationException ex = assertThrows(ValidationException.class, () -> 
-			//new Usuario(1L, null, "bob@email.com", "1234"));
-			//umUsuario().comNome(null).agora()
 			umUsuario().comNome(null).agora());
 		assertEquals("Nome é obrigatório", ex.getMessage());
+	}
+	
+	@Test
+	@DisplayName("Deve lançar uma exceção: usuário com nome vazio")
+	void deveRejeitarUmUsuarioComNomeVazio() {
+		ValidationException ex = assertThrows(ValidationException.class, () -> 
+			umUsuario().comNome("  ").agora());
+		assertEquals("Nome é obrigatório", ex.getMessage());
+	}
+	
+	@Test
+	@DisplayName("Deve lançar uma exceção: usuário com email nulo")
+	void deveRejeitarUmUsuarioComEmailNulo() {
+		ValidationException ex = assertThrows(ValidationException.class, () -> 
+			umUsuario().comEmail(null).agora());
+		assertEquals("Email é obrigatório", ex.getMessage());
+	}
+	
+	@Test
+	@DisplayName("Deve lançar uma exceção: usuário com email vazio")
+	void deveRejeitarUmUsuarioComEmailVazio() {
+		ValidationException ex = assertThrows(ValidationException.class, () -> 
+			umUsuario().comEmail("  ").agora());
+		assertEquals("Email é obrigatório", ex.getMessage());
+	}
+	
+	@Test
+	@DisplayName("Deve lançar uma exceção: usuário com senha null")
+	void deveRejeitarUmUsuarioComSenhaNull() {
+		ValidationException ex = assertThrows(ValidationException.class, () -> 
+		umUsuario().comSenha(null).agora());
+		assertEquals("Senha é obrigatória", ex.getMessage());
+	}
+	
+	@Test
+	@DisplayName("Deve lançar uma exceção: usuário com senha vazia")
+	void deveRejeitarUmUsuarioComSenhaVazia() {
+		ValidationException ex = assertThrows(ValidationException.class, () -> 
+		umUsuario().comSenha("  ").agora());
+		assertEquals("Senha é obrigatória", ex.getMessage());
 	}
 	
 
