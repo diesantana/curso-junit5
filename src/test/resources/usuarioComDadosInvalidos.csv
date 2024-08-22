@@ -1,0 +1,10 @@
+Nome, Email, Senha, Mensagem
+NULL, user@email.com, 1234, Nome é obrigatório
+ , user@email.com, 1234, Nome é obrigatório
+  , user@email.com, 1234, Nome é obrigatório
+Bob, NULL, 1234, Email é obrigatório
+Bob, , 1234, Email é obrigatório
+Bob,   , 1234, Email é obrigatório
+Bob, user@email.com, NULL, Senha é obrigatória
+Bob, user@email.com, , Senha é obrigatória
+Bob, user@email.com,   , Senha é obrigatória

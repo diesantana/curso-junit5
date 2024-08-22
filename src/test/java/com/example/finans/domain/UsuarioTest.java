@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvFileSource;
 import org.junit.jupiter.params.provider.CsvSource;
 
 import com.example.finans.domain.exception.ValidationException;
@@ -75,7 +76,6 @@ class UsuarioTest {
 		umUsuario().comSenha("  ").agora());
 		assertEquals("Senha é obrigatória", ex.getMessage());
 	}
-	*/
 	
 	@ParameterizedTest(name = "[{index}] - {3}")
 	@CsvSource(value = {
@@ -94,6 +94,35 @@ class UsuarioTest {
 		ValidationException ex = assertThrows(ValidationException.class, () -> 
 			umUsuario().comNome(nome).comEmail(email).comSenha(senha).agora()
 		);
+		assertEquals(msgErro, ex.getMessage());
+	}
+	 */
+	
+	@ParameterizedTest(name = "[{index}] - {3}")
+	@CsvFileSource(
+			resources = "/usuarioComDadosInvalidos.csv", 
+			nullValues = "NULL", 
+			numLinesToSkip = 1
+	)
+	@DisplayName("Deve lançar uma exceção: usuário com dados inválidos")
+	void deveRejeitarUmUsuarioComDadosInvalidos(String nome, String email, String senha, String msgErro) {
+		ValidationException ex = assertThrows(ValidationException.class, () -> 
+		umUsuario().comNome(nome).comEmail(email).comSenha(senha).agora()
+				);
+		assertEquals(msgErro, ex.getMessage());
+	}
+	
+	@ParameterizedTest()
+	@CsvFileSource(
+			resources = "/usuarioComDadosInvalidos.csv", 
+			nullValues = "NULL", 
+			useHeadersInDisplayName = true
+	)
+	@DisplayName("Deve lançar uma exceção: usuário com dados inválidos (useHeadersInDisplayName )")
+	void deveRejeitarUmUsuarioComDadosInvalidos2(String nome, String email, String senha, String msgErro) {
+		ValidationException ex = assertThrows(ValidationException.class, () -> 
+		umUsuario().comNome(nome).comEmail(email).comSenha(senha).agora()
+				);
 		assertEquals(msgErro, ex.getMessage());
 	}
 	
