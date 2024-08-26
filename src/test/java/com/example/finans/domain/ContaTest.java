@@ -30,7 +30,7 @@ public class ContaTest {
 		);
 	}
 	
-	@ParameterizedTest
+	@ParameterizedTest(name = "[{index}] - {3}")
 	@MethodSource("dadosInvalidos")
 	@DisplayName("Deve rejeitar uma conta inválida")
 	void deveRejeitarUmaContaInvalida(Long id, String nome, Usuario usuario, String mensagem) {
