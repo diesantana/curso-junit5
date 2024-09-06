@@ -20,19 +20,25 @@ public class UsuarioMemoryRepository implements UsuarioRepository {
 
 	@Override
 	public Usuario salvar(Usuario usuario) {
-		Usuario newUser = new Usuario(currentId, usuario.getNome(), usuario.getEmail(), usuario.getSenha());
+		Usuario newUser = new Usuario(nextId(), usuario.getNome(), usuario.getEmail(), usuario.getSenha());
 		users.add(newUser);
 		return newUser;
 	}
 
 	@Override
 	public Optional<Usuario> getUserByEmail(String email) {
-		// TODO Auto-generated method stub
-		return Optional.empty();
+		return users.stream()
+				.filter(user -> user.getEmail().equalsIgnoreCase(email))
+				.findFirst(); // retorna o 1° user com o mesmo email
 	}
 	
 	private Long nextId() {
 		return ++currentId; 
 	}
-
+	
+	public void printUsers() {
+		for(Usuario user : users) {
+			System.out.println(user);			
+		}
+	}
 }
