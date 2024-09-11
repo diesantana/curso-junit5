@@ -54,4 +54,11 @@ public class Usuario {
 		return Objects.equals(email, other.email) && Objects.equals(nome, other.nome)
 				&& Objects.equals(senha, other.senha);
 	}
+
+	@Override
+	public String toString() {
+		return "Usuario [id=" + id + ", nome=" + nome + ", email=" + email + ", senha=" + senha + "]";
+	}
+	
+	
 }
