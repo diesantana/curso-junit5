@@ -1,5 +1,7 @@
 package com.example.finans.service;
 
+import java.util.Optional;
+
 import com.example.finans.domain.Usuario;
 import com.example.finans.domain.exception.ValidationException;
 import com.example.finans.service.repositories.UsuarioRepository;
@@ -18,6 +20,10 @@ public class UsuarioService {
 			throw new ValidationException(String.format("Usuário %s já cadastrado!", user.getEmail()));
 		});
 		return repository.salvar(usuario);
+	}
+	
+	public Optional<Usuario> getUserByEmail(String email) {
+		return repository.getUserByEmail(email);
 	}
 	
 }
