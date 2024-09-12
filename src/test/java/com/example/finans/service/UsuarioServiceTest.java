@@ -2,6 +2,9 @@ package com.example.finans.service;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.Optional;
@@ -25,7 +28,6 @@ public class UsuarioServiceTest {
 		service = new UsuarioService(usuarioRepository); // Instancia o SUT com o Mock do repository
 	}
 
-	
 	@Test
 	void deveRetornarEmptyQuandoUsuarioNaoExiste() {
 		when(usuarioRepository.getUserByEmail("user@email.com")).thenReturn(Optional.empty()); // configura o mock
@@ -33,7 +35,7 @@ public class UsuarioServiceTest {
 		Optional<Usuario> usuario = service.getUserByEmail("user@email.com"); // faz a ação
 		assertTrue(usuario.isEmpty()); // faz a assertiva
 	}
-	
+
 	@Test
 	void deveRetornarUmUsuarioPorEmail() {
 		when(usuarioRepository.getUserByEmail("bob@email.com"))
@@ -41,5 +43,8 @@ public class UsuarioServiceTest {
 		
 		Optional<Usuario> user = service.getUserByEmail("bob@email.com"); 
 		assertTrue(user.isPresent());
+		
+		verify(usuarioRepository, times(1)).getUserByEmail("bob@email.com");
+		verify(usuarioRepository, never()).getUserByEmail("outro@email.com");
 	}
 }
