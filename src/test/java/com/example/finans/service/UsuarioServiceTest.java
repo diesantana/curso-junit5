@@ -47,4 +47,30 @@ public class UsuarioServiceTest {
 		verify(usuarioRepository, times(1)).getUserByEmail("bob@email.com");
 		verify(usuarioRepository, never()).getUserByEmail("outro@email.com");
 	}
+	
+	@Test
+	void deveRetornarUmUsuarioPorEmail2() {
+		when(usuarioRepository.getUserByEmail("bob@email.com"))
+		.thenReturn(Optional.of(UsuarioBuilderByMaster.umUsuario().comEmail("bob@email.com").agora()))
+		.thenReturn(Optional.of(
+				UsuarioBuilderByMaster
+				.umUsuario()
+				.comNome("Bob 2")
+				.comEmail("bob@email.com")
+				.agora())
+		);
+		
+		Optional<Usuario> user = service.getUserByEmail("bob@email.com"); 
+		assertTrue(user.isPresent());
+		System.out.println(user);
+		
+		user = service.getUserByEmail("bob@email.com"); 
+		System.out.println(user);
+		
+		verify(usuarioRepository, times(2)).getUserByEmail("bob@email.com");
+		verify(usuarioRepository, never()).getUserByEmail("outro@email.com");
+	}
+	
+	
+	
 }
