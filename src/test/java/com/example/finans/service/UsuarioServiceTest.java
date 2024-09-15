@@ -1,32 +1,38 @@
 package com.example.finans.service;
 
 import static com.example.finans.domain.builders.UsuarioBuilderByMaster.umUsuario;
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import java.util.Optional;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.example.finans.domain.Usuario;
 import com.example.finans.service.repositories.UsuarioRepository;
 
+@ExtendWith(MockitoExtension.class)
 public class UsuarioServiceTest {
 	@Mock
 	UsuarioRepository usuarioRepository;
 	@InjectMocks
 	UsuarioService service;
-	
+	/*
 	@BeforeEach
 	void beforeEach() {
 		MockitoAnnotations.openMocks(this);
 		//usuarioRepository = mock(UsuarioMemoryRepository.class); // Mock do repository
 		//service = new UsuarioService(usuarioRepository); // Instancia o SUT com o Mock do repository
 	}
+	*/
 
 	@Test
 	void deveRetornarEmptyQuandoUsuarioNaoExiste() {
