@@ -1,32 +1,31 @@
 package com.example.finans.service;
 
 import static com.example.finans.domain.builders.UsuarioBuilderByMaster.umUsuario;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
 import com.example.finans.domain.Usuario;
-import com.example.finans.infra.UsuarioMemoryRepository;
 import com.example.finans.service.repositories.UsuarioRepository;
 
 public class UsuarioServiceTest {
-	
+	@Mock
 	UsuarioRepository usuarioRepository;
+	@InjectMocks
 	UsuarioService service;
 	
 	@BeforeEach
 	void beforeEach() {
-		usuarioRepository = mock(UsuarioMemoryRepository.class); // Mock do repository
-		service = new UsuarioService(usuarioRepository); // Instancia o SUT com o Mock do repository
+		MockitoAnnotations.openMocks(this);
+		//usuarioRepository = mock(UsuarioMemoryRepository.class); // Mock do repository
+		//service = new UsuarioService(usuarioRepository); // Instancia o SUT com o Mock do repository
 	}
 
 	@Test
