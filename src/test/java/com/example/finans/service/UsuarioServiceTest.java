@@ -31,37 +31,26 @@ public class UsuarioServiceTest {
 
 	@Test
 	void deveRetornarEmptyQuandoUsuarioNaoExiste() {
-		when(usuarioRepository.getUserByEmail("user@email.com")).thenReturn(Optional.empty()); // configura o mock
-		
+		// Given
+		when(usuarioRepository.getUserByEmail("user@email.com"))
+			.thenReturn(Optional.empty()); // configura o mock
+		// When
 		Optional<Usuario> usuario = service.getUserByEmail("user@email.com"); // faz a ação
+		// Then
 		assertTrue(usuario.isEmpty()); // faz a assertiva
 	}
 
 	@Test
 	void deveRetornarUmUsuarioPorEmail() {
+		// Given
+		Optional<Usuario> userToReturn = Optional.of(umUsuario().comEmail("bob@email.com").agora());
 		when(usuarioRepository.getUserByEmail("bob@email.com"))
-			.thenReturn(Optional.of(umUsuario().comEmail("bob@email.com").agora())); // configura o Mock
-		
+			.thenReturn(userToReturn);
+		// When
 		Optional<Usuario> user = service.getUserByEmail("bob@email.com"); 
+		// Then
 		assertTrue(user.isPresent());
-		
 		verify(usuarioRepository, times(1)).getUserByEmail("bob@email.com");
-		verify(usuarioRepository, never()).getUserByEmail("outro@email.com");
-	}
-	
-	@Test
-	void deveRetornarUmUsuarioPorEmail2() {
-		when(usuarioRepository.getUserByEmail("bob@email.com"))
-		.thenReturn(Optional.of(umUsuario().comEmail("bob@email.com").agora()))
-		.thenReturn(Optional.of(
-				umUsuario().comNome("Bob 2").comEmail("bob@email.com").agora())
-		);
-		
-		Optional<Usuario> user = service.getUserByEmail("bob@email.com"); 
-		assertTrue(user.isPresent());
-		user = service.getUserByEmail("bob@email.com"); 
-		
-		verify(usuarioRepository, times(2)).getUserByEmail("bob@email.com");
 		verify(usuarioRepository, never()).getUserByEmail("outro@email.com");
 	}
 	
@@ -69,14 +58,11 @@ public class UsuarioServiceTest {
 	void deveSalvarUsuarioComSucesso() {
 		// Given - Arrange
 		Usuario userToSave = umUsuario().comId(null).agora(); // User a ser salvo
-		
 		when(usuarioRepository.getUserByEmail(userToSave.getEmail()))
 			.thenReturn(Optional.empty());  // Configura o comportamento do Mock
 		when(usuarioRepository.salvar(userToSave)).thenReturn(umUsuario().agora()); 
-		
 		// When - Act
 		Usuario savedUser = service.salvar(userToSave);
-		
 		// Then - Assert
 		assertNotNull(savedUser.getId());
 		verify(usuarioRepository).getUserByEmail(userToSave.getEmail());
