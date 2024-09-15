@@ -1,5 +1,7 @@
 package com.example.finans.service;
 
+import static com.example.finans.domain.builders.UsuarioBuilderByMaster.umUsuario;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
@@ -13,7 +15,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import com.example.finans.domain.Usuario;
-import com.example.finans.domain.builders.UsuarioBuilderByMaster;
 import com.example.finans.infra.UsuarioMemoryRepository;
 import com.example.finans.service.repositories.UsuarioRepository;
 
@@ -39,7 +40,7 @@ public class UsuarioServiceTest {
 	@Test
 	void deveRetornarUmUsuarioPorEmail() {
 		when(usuarioRepository.getUserByEmail("bob@email.com"))
-			.thenReturn(Optional.of(UsuarioBuilderByMaster.umUsuario().comEmail("bob@email.com").agora())); // configura o Mock
+			.thenReturn(Optional.of(umUsuario().comEmail("bob@email.com").agora())); // configura o Mock
 		
 		Optional<Usuario> user = service.getUserByEmail("bob@email.com"); 
 		assertTrue(user.isPresent());
@@ -51,26 +52,35 @@ public class UsuarioServiceTest {
 	@Test
 	void deveRetornarUmUsuarioPorEmail2() {
 		when(usuarioRepository.getUserByEmail("bob@email.com"))
-		.thenReturn(Optional.of(UsuarioBuilderByMaster.umUsuario().comEmail("bob@email.com").agora()))
+		.thenReturn(Optional.of(umUsuario().comEmail("bob@email.com").agora()))
 		.thenReturn(Optional.of(
-				UsuarioBuilderByMaster
-				.umUsuario()
-				.comNome("Bob 2")
-				.comEmail("bob@email.com")
-				.agora())
+				umUsuario().comNome("Bob 2").comEmail("bob@email.com").agora())
 		);
 		
 		Optional<Usuario> user = service.getUserByEmail("bob@email.com"); 
 		assertTrue(user.isPresent());
-		System.out.println(user);
-		
 		user = service.getUserByEmail("bob@email.com"); 
-		System.out.println(user);
 		
 		verify(usuarioRepository, times(2)).getUserByEmail("bob@email.com");
 		verify(usuarioRepository, never()).getUserByEmail("outro@email.com");
 	}
 	
+	@Test
+	void deveSalvarUsuarioComSucesso() {
+		// Given - Arrange
+		Usuario userToSave = umUsuario().comId(null).agora(); // User a ser salvo
+		
+		when(usuarioRepository.getUserByEmail(userToSave.getEmail()))
+			.thenReturn(Optional.empty());  // Configura o comportamento do Mock
+		when(usuarioRepository.salvar(userToSave)).thenReturn(umUsuario().agora()); 
+		
+		// When - Act
+		Usuario savedUser = service.salvar(userToSave);
+		
+		// Then - Assert
+		assertNotNull(savedUser.getId());
+		verify(usuarioRepository).getUserByEmail(userToSave.getEmail());
+	}
 	
 	
 }
