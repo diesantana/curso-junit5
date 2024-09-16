@@ -1,8 +1,7 @@
 package com.example.finans.service;
 
 import static com.example.finans.domain.builders.UsuarioBuilderByMaster.umUsuario;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -17,6 +16,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.example.finans.domain.Usuario;
+import com.example.finans.domain.exception.ValidationException;
 import com.example.finans.service.repositories.UsuarioRepository;
 
 @ExtendWith(MockitoExtension.class)
@@ -71,6 +71,20 @@ public class UsuarioServiceTest {
 		// Then - Assert
 		assertNotNull(savedUser.getId());
 		verify(usuarioRepository).getUserByEmail(userToSave.getEmail());
+	}
+	
+	@Test
+	void deveRejeitarUsuarioExistente() {
+		// Given - Arrange
+		Usuario userToSave = umUsuario().comId(null).agora();
+		when(usuarioRepository.getUserByEmail(userToSave.getEmail()))
+			.thenReturn(Optional.of(umUsuario().agora()));
+		// When - Act & Then 
+		ValidationException ex = assertThrows(ValidationException.class, () -> {
+			service.salvar(userToSave);
+		});
+		assertTrue(ex.getMessage().contains("já cadastrado!"));
+		verify(usuarioRepository, never()).salvar(userToSave);
 	}
 	
 	
