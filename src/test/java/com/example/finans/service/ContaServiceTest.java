@@ -1,6 +1,7 @@
 package com.example.finans.service;
 
 import static com.example.finans.domain.builders.ContaBuilder.umConta;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.doNothing;
@@ -14,6 +15,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.example.finans.domain.Conta;
@@ -32,17 +34,17 @@ public class ContaServiceTest {
 	private ContaService contaService;
 	
 	@Test
-	void deveSalvarContaComSucesso() {
+	void deveSalvarContaComSucesso() throws Exception {
 		// Given - Arrange
-		Conta contaToSalve = umConta().comId(null).agora();
-		when(contaRepository.getContaByName(contaToSalve.getNome()))
+		Conta contaToSave = umConta().comId(null).agora();
+		when(contaRepository.getContaByName(contaToSave.getNome()))
 			.thenReturn(Optional.empty());
-		when(contaRepository.salvar(contaToSalve))
+		when(contaRepository.salvar(contaToSave))
 			.thenReturn(umConta().agora());
 		doNothing().when(event).dispatch(umConta().agora(), EventType.CREATED);
 		
 		// When - Action
-		Conta savedConta = contaService.salvar(contaToSalve);
+		Conta savedConta = contaService.salvar(contaToSave);
 		
 		// Then - Assertion 
 		assertNotNull(savedConta.getId());
@@ -51,14 +53,37 @@ public class ContaServiceTest {
 	@Test
 	void deveRejeitarContaExistente() {
 		// Given - Arrange
-		Conta contaToSalve = umConta().comId(null).agora();
-		when(contaRepository.getContaByName(contaToSalve.getNome()))
+		Conta contaToSave = umConta().comId(null).agora();
+		when(contaRepository.getContaByName(contaToSave.getNome()))
 			.thenReturn(Optional.of(umConta().agora()));
 		
 		// When (Act) && Then (Assert)
 		assertThrows(ValidationException.class, () -> {
-			contaService.salvar(contaToSalve);
+			contaService.salvar(contaToSave);
 		});
-		verify(contaRepository, never()).salvar(contaToSalve);
+		verify(contaRepository, never()).salvar(contaToSave);
+	}
+	
+	@Test
+	void deveLançarExceçãoQuandoOcorrerErroNoContaEvent() throws Exception {
+		// Given - Arrange
+		Conta contaToSave = umConta().comId(null).agora();
+		Conta contaSalva = umConta().agora();
+		
+		when(contaRepository.getContaByName(contaToSave.getNome()))
+			.thenReturn(Optional.empty());
+		when(contaRepository.salvar(contaToSave)).thenReturn(contaSalva);
+		
+		Conta contaPersistida = contaRepository.salvar(contaToSave);
+		Mockito.doThrow(new Exception("uma mensagem"))
+			.when(event).dispatch(contaPersistida, EventType.CREATED);
+		
+		// When (Act) && Then (Assert)
+		Exception exception = assertThrows(Exception.class, ()-> {
+			contaService.salvar(contaToSave);
+		});
+		
+		assertEquals("Falha na criação da conta, tente novamente", exception.getMessage());
+		verify(contaRepository).deletar(contaPersistida);
 	}
 }

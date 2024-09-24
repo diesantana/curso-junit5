@@ -20,8 +20,16 @@ public class ContaService {
 		repository.getContaByName(contaToSalve.getNome()).ifPresent(conta -> {
 			throw new ValidationException("A conta já existe!");
 		});
+		
 		Conta contaPersistida = repository.salvar(contaToSalve);
-		contaEvent.dispatch(contaPersistida, EventType.CREATED);
+		
+		try {
+			contaEvent.dispatch(contaPersistida, EventType.CREATED);			
+		} catch (Exception e) {
+			repository.deletar(contaPersistida);
+			throw new RuntimeException("Falha na criação da conta, tente novamente");
+		}
+		
 		return contaPersistida;
 	}
 }
