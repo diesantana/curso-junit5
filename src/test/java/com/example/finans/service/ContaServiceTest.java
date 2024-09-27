@@ -66,6 +66,7 @@ public class ContaServiceTest {
 	
 	@Test
 	void deveLançarExceçãoQuandoOcorrerErroNoContaEvent() throws Exception {
+
 		// Given - Arrange
 		Conta contaToSave = umConta().comId(null).agora();
 		Conta contaSalva = umConta().agora();
@@ -85,5 +86,19 @@ public class ContaServiceTest {
 		
 		assertEquals("Falha na criação da conta, tente novamente", exception.getMessage());
 		verify(contaRepository).deletar(contaPersistida);
+	}
+
+	@Test
+	void deveRejeitarContaExistente2() {
+		// Given - Arrange
+		Conta contaToSave = umConta().comId(null).agora();
+		when(contaRepository.getContaByName(Mockito.anyString()))
+			.thenReturn(Optional.of(umConta().agora()));
+		
+		// When (Act) && Then (Assert)
+		assertThrows(ValidationException.class, () -> {
+			contaService.salvar(contaToSave);
+		});
+		verify(contaRepository, never()).salvar(contaToSave);
 	}
 }
