@@ -13,6 +13,8 @@ import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -32,6 +34,8 @@ public class ContaServiceTest {
 	private ContaEvent event; 
 	@InjectMocks
 	private ContaService contaService;
+	@Captor
+	private ArgumentCaptor<Conta> contaCaptor;
 	
 	@Test
 	void deveSalvarContaComSucesso() throws Exception {
@@ -100,5 +104,25 @@ public class ContaServiceTest {
 			contaService.salvar(contaToSave);
 		});
 		verify(contaRepository, never()).salvar(contaToSave);
+	}
+	
+	@Test
+	void deveSalvarContaComCaptor() {
+		// Given - Arrange
+		Conta contaToSalve = umConta().comId(null).agora();
+		when(contaRepository.getContaByName(contaToSalve.getNome()))
+			.thenReturn(Optional.empty());
+		when(contaRepository.salvar(contaToSalve)).thenReturn(umConta().agora());
+		
+		// When - Act 
+		Conta contaPersistida = contaService.salvar(contaToSalve);
+		verify(contaRepository).salvar(contaCaptor.capture()); // verifica se o salver do repository foi chamado e captura o seu argumento
+		
+		// Then - Assert
+		Conta contaCapturada = contaCaptor.getValue();
+		assertNotNull(contaPersistida.getId());
+		assertEquals(contaToSalve.getId(), contaCapturada.getId());
+		assertEquals(contaToSalve.getNome(), contaCapturada.getNome());
+		
 	}
 }
