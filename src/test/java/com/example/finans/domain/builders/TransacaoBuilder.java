@@ -1,5 +1,7 @@
 package com.example.finans.domain.builders;
 
+import static com.example.finans.domain.builders.ContaBuilder.umConta;
+
 import java.time.LocalDate;
 
 import com.example.finans.domain.Conta;
@@ -10,7 +12,7 @@ public class TransacaoBuilder {
 	private Transacao elemento;
 	private TransacaoBuilder(){}
 
-	public static TransacaoBuilder umTransacao() {
+	public static TransacaoBuilder umaTransacao() {
 		TransacaoBuilder builder = new TransacaoBuilder();
 		inicializarDadosPadroes(builder);
 		return builder;
@@ -22,10 +24,10 @@ public class TransacaoBuilder {
 
 		
 		elemento.setId(1L);
-		elemento.setDescricao("");
-		elemento.setValor(0.0);
-		elemento.setConta(null);
-		elemento.setData(null);
+		elemento.setDescricao("Transação válida");
+		elemento.setValor(50.0);
+		elemento.setConta(umConta().agora());
+		elemento.setData(LocalDate.now());
 		elemento.setStatus(false);
 	}
 
