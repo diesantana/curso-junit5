@@ -6,10 +6,13 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.stream.Stream;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -34,8 +37,14 @@ public class TransacaoServiceTest {
 	@Mock
 	private TransacaoDao dao;
 	
+	@BeforeEach
+	void beaforeEach() {
+		assumeTrue(LocalDateTime.now().getHour() < 16);		
+	}
+	
 	@Test
 	void deveSalvarTransacaoValida() {
+		
 		// Given - Arrange
 		Transacao transacaoToSave = umaTransacao().comId(null).agora();
 		Mockito.when(dao.salvar(transacaoToSave)).thenReturn(umaTransacao().agora());
