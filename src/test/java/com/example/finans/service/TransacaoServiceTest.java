@@ -6,20 +6,23 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.mockStatic;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.stream.Stream;
 
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.condition.EnabledIf;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
@@ -28,7 +31,7 @@ import com.example.finans.domain.Transacao;
 import com.example.finans.domain.exception.ValidationException;
 import com.example.finans.service.repositories.TransacaoDao;
 
-@EnabledIf(value = "isHoraValida")
+//@EnabledIf(value = "isHoraValida")
 @ExtendWith(MockitoExtension.class)
 public class TransacaoServiceTest {
 
@@ -37,11 +40,17 @@ public class TransacaoServiceTest {
 	@Mock
 	private TransacaoDao dao;
 	
-/*	@BeforeEach
+	private MockedStatic<LocalDateTime> mockedStaticLocalDate;
+	private LocalDateTime dataDesejada;
+	
+	@BeforeEach
 	void beaforeEach() {
-		assumeTrue(LocalDateTime.now().getHour() < 16);		
+//		assumeTrue(LocalDateTime.now().getHour() < 16);		
+		dataDesejada = LocalDateTime.of(2024, 10, 7, 9, 30, 28);
+		mockedStaticLocalDate = mockStatic(LocalDateTime.class);
+		mockedStaticLocalDate.when(() -> LocalDateTime.now()).thenReturn(dataDesejada);
 	}
-*/
+
 	@Test
 	void deveSalvarTransacaoValida() {
 		
@@ -78,6 +87,31 @@ public class TransacaoServiceTest {
 		assertEquals(expectedMsg, exception.getMessage());
 	}
 	
+	/*
+	@ParameterizedTest(name = "{5}")
+	//@MethodSource("invalidDataParameterized")
+	@MethodSource()
+	@DisplayName("Método salvar dele lançar uma ValidationException")
+	void salvarDeveLancarExcecaoQuandoDadosForemInvalidos2(String descricao, 
+			Double valor, Conta conta, LocalDate data, Boolean status, String expectedMsg) {
+		
+		LocalDateTime dataDesejada = LocalDateTime.of(2024, 10, 7, 9, 30, 28);
+		 // Criar o mock para o método estático
+		try(MockedStatic<LocalDateTime> ldt = mockStatic(LocalDateTime.class)) {
+			//Definir o comportamento do método estático
+			ldt.when(() -> LocalDateTime.now()).thenReturn(dataDesejada);
+			
+			Transacao transacao = umaTransacao().comDescricao(descricao)
+					.comValor(valor).comConta(conta).comData(data).comStatus(status).agora();
+			ValidationException exception = assertThrows(ValidationException.class, () -> {
+				service.salvar(transacao);
+			});
+			assertEquals(expectedMsg, exception.getMessage());
+		}
+		
+	}
+	*/
+	
 	static Stream<Arguments> salvarDeveLancarExcecaoQuandoDadosForemInvalidos() {
 		return Stream.of(
 			Arguments.of(null, 100.0, umConta().agora(), LocalDate.now(), true, "Descrição inexistente"),
@@ -87,8 +121,13 @@ public class TransacaoServiceTest {
 		);
 	}
 	
-	public static boolean isHoraValida() {
-		return LocalDateTime.now().getHour() < 10;
-	}
+	/*
+	  public static boolean isHoraValida() { return LocalDateTime.now().getHour() <
+	  10; }
+	 */
 	
+	@AfterEach
+	void tearDown() {
+		mockedStaticLocalDate.close();
+	}
 }
