@@ -1,5 +1,7 @@
 package com.example.finans.service;
 
+import java.time.LocalDateTime;
+
 import com.example.finans.domain.Transacao;
 import com.example.finans.domain.exception.ValidationException;
 import com.example.finans.service.external.ClockService;
@@ -8,16 +10,16 @@ import com.example.finans.service.repositories.TransacaoDao;
 public class TransacaoService {
 
 	private TransacaoDao dao;
-	private ClockService clockService;	
+	//private ClockService clockService;	
 	
 	public TransacaoService(TransacaoDao dao, ClockService clockService) {
 		this.dao = dao;
-		this.clockService = clockService;
+		//this.clockService = clockService;
 	}
 
 
 	public Transacao salvar(Transacao transacao) {
-		if (clockService.getCurrentTime().getHour() > 16) 
+		if (getTime().getHour() > 16) 
 			throw new RuntimeException("Tente novamente amanhã");
 		
 		if(transacao.getDescricao() == null) throw new ValidationException("Descrição inexistente");
@@ -29,6 +31,8 @@ public class TransacaoService {
 		return dao.salvar(transacao);
 	}
 	
-	
+	protected LocalDateTime getTime() {
+		return LocalDateTime.now();
+	}
 	
 }

@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.when;
 
 import java.time.LocalDate;
@@ -21,27 +22,29 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.example.finans.domain.Conta;
 import com.example.finans.domain.Transacao;
 import com.example.finans.domain.exception.ValidationException;
-import com.example.finans.service.external.ClockService;
 import com.example.finans.service.repositories.TransacaoDao;
 
 @ExtendWith(MockitoExtension.class)
 public class TransacaoServiceTest {
 
-	@InjectMocks
+	@InjectMocks 
+	@Spy
 	private TransacaoService service;
 	@Mock
 	private TransacaoDao dao;
-	@Mock
-	private ClockService clockService;
+	//@Mock private ClockService clockService;
 	
 	@BeforeEach
 	void beaforeEach() {
-		when(clockService.getCurrentTime()).thenReturn(LocalDateTime.of(2024, 10, 15, 7, 30, 30));
+		//when(clockService.getCurrentTime()).thenReturn(LocalDateTime.of(2024, 10, 15, 7, 30, 30));
+		//when(service.getTime()).thenReturn(LocalDateTime.of(2024, 10, 15, 7, 30, 30));
+		doReturn(LocalDateTime.of(2024, 10, 15, 7, 30, 30)).when(service).getTime();
 	}
 
 	@Test
