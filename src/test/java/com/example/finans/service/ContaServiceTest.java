@@ -22,8 +22,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.example.finans.domain.Conta;
 import com.example.finans.domain.exception.ValidationException;
-import com.example.finans.service.events.ContaEvent;
-import com.example.finans.service.events.ContaEvent.EventType;
+import com.example.finans.service.external.ContaEvent;
+import com.example.finans.service.external.ContaEvent.EventType;
 import com.example.finans.service.repositories.ContaRepository;
 
 @ExtendWith(MockitoExtension.class)

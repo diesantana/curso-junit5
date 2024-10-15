@@ -1,4 +1,4 @@
-package com.example.finans.service.events;
+package com.example.finans.service.external;
 
 import com.example.finans.domain.Conta;
 
