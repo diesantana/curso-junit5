@@ -4,9 +4,11 @@ import static com.example.finans.domain.builders.ContaBuilder.umConta;
 import static com.example.finans.domain.builders.TransacaoBuilder.umaTransacao;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.time.LocalDate;
@@ -20,17 +22,24 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 
 import com.example.finans.domain.Conta;
 import com.example.finans.domain.Transacao;
+import com.example.finans.domain.builders.TransacaoBuilder;
 import com.example.finans.domain.exception.ValidationException;
 import com.example.finans.service.repositories.TransacaoDao;
 
 @ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
 public class TransacaoServiceTest {
 
 	@InjectMocks 
@@ -39,6 +48,9 @@ public class TransacaoServiceTest {
 	@Mock
 	private TransacaoDao dao;
 	//@Mock private ClockService clockService;
+	
+	@Captor
+	private ArgumentCaptor<Transacao> transacaoCaptor;
 	
 	@BeforeEach
 	void beaforeEach() {
@@ -89,6 +101,29 @@ public class TransacaoServiceTest {
 			Arguments.of("Uma Descrição", 100.0, null, LocalDate.now(), true, "Conta inexistente"),
 			Arguments.of("Uma Descrição", 100.0, umConta().agora(), null, true, "Data inexistente")
 		);
+	}
+	
+	@Test
+	void salvarDeveLancarExcecaoQuandoHoraInvalida() {
+		//doReturn(LocalDateTime.of(2024, 10, 15, 17, 30, 30)).when(service).getTime();
+		Mockito.reset(service);
+		Transacao transacao = umaTransacao().agora();
+		
+		RuntimeException exception = assertThrows(RuntimeException.class, () -> {
+			service.salvar(transacao);
+		});
+		
+		assertEquals("Tente novamente amanhã", exception.getMessage());;
+	}
+	
+	@Test
+	void salvarDeveSalvarTrasacaoComStatusFalse() {
+		Transacao transacao = umaTransacao().comStatus(null).agora();
+		// capturando o arg passado para o dao.salvar()
+		service.salvar(transacao);
+		verify(dao).salvar(transacaoCaptor.capture());
+		Transacao transacaoPersistida = transacaoCaptor.getValue();
+		assertFalse(transacaoPersistida.getStatus());
 	}
 	
 }

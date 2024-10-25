@@ -26,7 +26,7 @@ public class CalculadoraTest {
 	@Test
 	public void deveLancarUmaExcecaoQuandoDividirPorZero_JUnit5() {
 		assertThrows(ArithmeticException.class, () -> {
-			float result = 10 / 07;
+			float result = 10 / 0;
 		});
 	}
 	

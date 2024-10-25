@@ -43,6 +43,7 @@ public class ContaTest {
 	private static Stream<Arguments> dadosInvalidos() {
 		return Stream.of(
 				Arguments.of(1L, null, umUsuario().agora(), "Nome é obrigatório"),
+				Arguments.of(1L, "  ", umUsuario().agora(), "Nome é obrigatório"),
 				Arguments.of(1L, "Conta Válida", null, "Usuário é obrigatório")
 		);
 	}
