@@ -69,7 +69,7 @@ public class ContaServiceTest {
 	}
 	
 	@Test
-	void deveLançarExceçãoQuandoOcorrerErroNoContaEvent() throws Exception {
+	void deveLancarExcecaoQuandoOcorrerErroNoContaEvent() throws Exception {
 
 		// Given - Arrange
 		Conta contaToSave = umConta().comId(null).agora();
