@@ -39,6 +39,14 @@
 		    <version>${mockito.version}</version>
 		    <scope>test</scope>
 		</dependency>
+		<dependency>
+		    <groupId>org.junit.platform</groupId>
+		    <artifactId>junit-platform-suite</artifactId>
+		    <version>1.9.3</version>
+		    <scope>test</scope>
+		</dependency>
+
+
 	</dependencies>
 	
 </project>
