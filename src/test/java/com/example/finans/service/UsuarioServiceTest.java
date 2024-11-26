@@ -9,6 +9,7 @@ import static org.mockito.Mockito.when;
 
 import java.util.Optional;
 
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -19,6 +20,8 @@ import com.example.finans.domain.Usuario;
 import com.example.finans.domain.exception.ValidationException;
 import com.example.finans.service.repositories.UsuarioRepository;
 
+@Tag("service")
+@Tag("user")
 @ExtendWith(MockitoExtension.class)
 public class UsuarioServiceTest {
 	@Mock

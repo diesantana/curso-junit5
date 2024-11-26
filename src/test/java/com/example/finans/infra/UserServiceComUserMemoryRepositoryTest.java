@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 
@@ -12,6 +13,7 @@ import com.example.finans.domain.Usuario;
 import com.example.finans.domain.exception.ValidationException;
 import com.example.finans.service.UsuarioService;
 
+@Tag("infra")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class UserServiceComUserMemoryRepositoryTest {
 

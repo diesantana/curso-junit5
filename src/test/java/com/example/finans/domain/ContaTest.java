@@ -9,6 +9,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -16,8 +17,9 @@ import org.junit.jupiter.params.provider.MethodSource;
 
 import com.example.finans.domain.exception.ValidationException;
 
+@Tag("domain")
+@Tag("account")
 public class ContaTest {
-
 	@Test
 	@DisplayName("Deve criar uma conta válida")
 	void deveCriarUmaContaValida() {

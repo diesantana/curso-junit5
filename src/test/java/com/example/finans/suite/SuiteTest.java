@@ -9,8 +9,8 @@ import org.junit.platform.suite.api.SuiteDisplayName;
 import com.example.finans.service.TransacaoServiceTest;
 import com.example.finans.service.UsuarioServiceTest;
 
-@Suite
-@SuiteDisplayName("Suite de testes")
+/*@Suite
+@SuiteDisplayName("Suite de testes")*/
 /*@SelectClasses(value = {
 		UsuarioServiceTest.class,
 		TransacaoServiceTest.class

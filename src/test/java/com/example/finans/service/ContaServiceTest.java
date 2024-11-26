@@ -11,6 +11,7 @@ import static org.mockito.Mockito.when;
 
 import java.util.Optional;
 
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -26,6 +27,8 @@ import com.example.finans.service.external.ContaEvent;
 import com.example.finans.service.external.ContaEvent.EventType;
 import com.example.finans.service.repositories.ContaRepository;
 
+@Tag("service")
+@Tag("account")
 @ExtendWith(MockitoExtension.class)
 public class ContaServiceTest {
 	@Mock

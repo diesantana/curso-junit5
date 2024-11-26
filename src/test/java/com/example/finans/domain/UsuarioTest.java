@@ -2,9 +2,11 @@ package com.example.finans.domain;
 
 //import static com.example.finans.domain.builders.UsuarioBuilder.umUsuario;
 import static com.example.finans.domain.builders.UsuarioBuilderByMaster.umUsuario;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvFileSource;
@@ -12,8 +14,9 @@ import org.junit.jupiter.params.provider.CsvFileSource;
 
 import com.example.finans.domain.exception.ValidationException;
 
+@Tag("domain")
+@Tag("user")
 class UsuarioTest {
-
 	@Test
 	@DisplayName("Deve criar um usuário válido")
 	void deveCriarUmUsuarioValido() {
