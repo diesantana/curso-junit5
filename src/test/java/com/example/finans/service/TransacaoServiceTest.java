@@ -105,8 +105,8 @@ public class TransacaoServiceTest {
 	
 	@Test
 	void salvarDeveLancarExcecaoQuandoHoraInvalida() {
-		//doReturn(LocalDateTime.of(2024, 10, 15, 17, 30, 30)).when(service).getTime();
-		Mockito.reset(service);
+		doReturn(LocalDateTime.of(2024, 10, 15, 17, 30, 30)).when(service).getTime();
+		//Mockito.reset(service);
 		Transacao transacao = umaTransacao().agora();
 		
 		RuntimeException exception = assertThrows(RuntimeException.class, () -> {
